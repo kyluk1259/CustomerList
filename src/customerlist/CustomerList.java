@@ -22,21 +22,27 @@ public class CustomerList {
     public static File customerFile;
 
     /**
-     * @param args the command line arguments
+     *
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        try {
+            customerFile = new File("src/customerlist/Resources/Customers.txt");
+        } catch (Exception e) {
+            System.out.println("Fatal Error: Customer List Not Found. \nPlease reinstall or create a new one called Customers.txt in \\src\\Resources\\");
+            System.exit(0);
+        }
         readFile();
         newCust();
     }
 
+    //Method that reads file and prints it to console
     public static String readFile() {
 
         try {
-            customerFile = new File("Y:\\Documents\\NetBeansProjects\\CustomerList\\Resources\\Customers.txt");
             text = new BufferedReader(new FileReader(customerFile));
         } catch (FileNotFoundException e) {
-            System.out.println("Fatal Error: Customer List Not Found. \nPlease reinstall or create a new one called Customers.txt in \\CustomerList\\Resources\\");
+            System.out.println("Fatal Error: Customer List Not Found. \nPlease reinstall or create a new one called Customers.txt in \\src\\Resources\\");
             System.exit(0);
         }
 
@@ -62,19 +68,20 @@ public class CustomerList {
         return existingList;
     }
 
+    //Method that prompts the user for customer name and postal code, then prints this information to customer list file
     public static void newCust() {
-        
+
         Boolean running = true;
         Scanner input = new Scanner(System.in);
-        
+
         //Initialize Buffered Writer
-        try{
-        writeFile = new BufferedWriter(new FileWriter(customerFile, true)); 
+        try {
+            writeFile = new BufferedWriter(new FileWriter(customerFile, true));
         } catch (IOException e) {
             System.out.println("Fatal Error: File Can't Be Written To. \nPlease reinstall or create a new one called Customers.txt in \\CustomerList\\Resources\\");
             System.exit(0);
         }
-        
+
         //Get and check name of new customer
         System.out.print("\nPlease enter the customer's name: ");
         while (running != false) {
@@ -88,7 +95,7 @@ public class CustomerList {
             }
         }
 
-        //Get and check postal code of new customer
+        //Get and check format of postal for new customer
         running = true;
         System.out.print("\nPlease enter the customer's postal code(A#A#A#): ");
         while (running != false) {
@@ -98,35 +105,41 @@ public class CustomerList {
                     && Character.isAlphabetic(newPC.charAt(4)) && Character.isDigit(newPC.charAt(5))) {
                 running = false;
             } else {
-                System.out.println("Please enter the customer's NAME");
+                System.out.println("Please enter the customer's POSTAL CODE (A#A#A#):");
             }
         }
-        
+
         //Set line output and print to file
         running = true;
         output = (newName + ": " + newPC);
-        try{
-        writeFile.newLine();
-        writeFile.write(output);
-        }catch(IOException e){}
+        try {
+            writeFile.newLine();
+            writeFile.write(output);
+        } catch (IOException e) {
+        }
         
-        //Ask if the user wants to input another customer
-         while (running = true) {
-            System.out.print("Would you like to add another customer? (1 - Yes / 2 - No): ");
-            in = "";
-            in = input.next();
-            if(in.equals("1")){
-                newCust();
-            }else if(in.equals("2")){
-                try{
-                    writeFile.close();
-                }catch(IOException e){}
-                break;
-            }else{
+        //Run add method
+        add();
+    }
+
+    //Ask if the user wants to input another customer
+    public static void add() {
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Would you like to add another customer? (1 - Yes / 2 - No): ");
+        in = "";
+        in = input.next();
+        if (in.equals("1")) {
+            newCust();
+        } else if (in.equals("2")) {
+            try {
+                writeFile.close();
+            } catch (IOException e) {
             }
+        } else {
+
         }
         System.out.println("New customers have been written to the file.");
     }
 }
-
-
